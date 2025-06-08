@@ -25,23 +25,25 @@ struct ContentView: View {
 
     // MARK: - Actions
 
+    // MARK: - Actions
+
+    private func executeTask(isAsync: Bool) {
+        let threadId = Thread.current.hash
+        let isMainThread = Thread.isMainThread
+        let prefix =
+            isAsync ? "Executing task ⦷ asynchronously!" : "Executing task ⌽ synchronously!"
+        print("\(prefix) Thread ID: \(threadId), Is Main Thread: \(isMainThread)")
+    }
+
     func executeAsynchronously() {
         queue.async {
-            let threadId = Thread.current.hash
-            let isMainThread = Thread.isMainThread
-            print(
-                "Executing task ⦷ asynchronously! Thread ID: \(threadId), Is Main Thread: \(isMainThread)"
-            )
+            executeTask(isAsync: true)
         }
     }
 
     func executeSynchronously() {
         queue.sync {
-            let threadId = Thread.current.hash
-            let isMainThread = Thread.isMainThread
-            print(
-                "Executing task ⌽ synchronously! Thread ID: \(threadId), Is Main Thread: \(isMainThread)"
-            )
+            executeTask(isAsync: false)
         }
     }
 }
