@@ -42,7 +42,7 @@ struct ContentView: View {
 
     func executeSynchronously() {
         queue.sync {
-            executeTask(isAsync: false, sleepTime: 0.5)
+            executeTask(isAsync: false, sleepTime: 5.0)
         }
     }
 }
