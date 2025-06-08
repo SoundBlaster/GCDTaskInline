@@ -19,6 +19,9 @@ struct ContentView: View {
             Button("Execute Synchronously") {
                 executeSynchronously()
             }
+            Button("Execute Complex") {
+                executeComplex()
+            }
         }
         .padding()
     }
@@ -43,6 +46,28 @@ struct ContentView: View {
     func executeSynchronously() {
         queue.sync {
             executeTask(isAsync: false, sleepTime: 5.0)
+        }
+    }
+
+    func executeComplex() {
+        let group = DispatchGroup()
+
+        // Start 3 asynchronous tasks
+        for i in 0..<3 {
+            queue.async(group: group) {
+                executeTask(isAsync: true, sleepTime: Double(0.5 + Double(i) * 0.2))
+            }
+        }
+
+        // Start 1 synchronous task
+        group.enter()
+        queue.sync(flags: .barrier) {
+            executeTask(isAsync: false, sleepTime: 2.0)
+            group.leave()
+        }
+
+        group.notify(qos: .background) {
+            print("All complex tasks completed.")
         }
     }
 }
